@@ -1,0 +1,59 @@
+# configs/regions.yaml
+# Parametrización de las 3 regiones cloud (Sección 1.1 de la planificación)
+# Nota: Tarifas, capacidades, potencias y latencias son supuestos de diseño 
+# alineados con los rangos verificados en la literatura del proyecto.
+
+regions:
+  0:
+    id: 0
+    name: "Cloud_A_Green"
+    description: "Verde / Cara / Lejana (Inspirada en eu-north-1)"
+    ci_mean_g_kwh: 45.0        # Intensidad media de carbono (gCO2/kWh)
+    ci_amp_g_kwh: 15.0         # Amplitud diurna sinusoidal (±gCO2/kWh)
+    ci_phase_rad: 0.0          # Fase del ciclo solar/eólico diario
+    price_per_vcpu_h: 0.060    # Costo operativo (USD / vCPU-hora)
+    max_vcpu: 64               # Capacidad total de cómputo (vCPUs)
+    net_latency_h: 0.120       # Latencia base de red en horas (equiv. 120 ms / batch)
+    power_kw_per_vcpu: 0.035   # Potencia activa por vCPU (kW/vCPU)
+
+  1:
+    id: 1
+    name: "Cloud_B_Balanced"
+    description: "Económica / Carbono Medio / Capacidad Media (Inspirada en us-west-2)"
+    ci_mean_g_kwh: 250.0
+    ci_amp_g_kwh: 90.0
+    ci_phase_rad: 1.57
+    price_per_vcpu_h: 0.025
+    max_vcpu: 96
+    net_latency_h: 0.060       # Equiv. 60 ms / batch
+    power_kw_per_vcpu: 0.040
+
+  2:
+    id: 2
+    name: "Cloud_C_LowLat_Fossil"
+    description: "Baja Latencia / Alta Capacidad / Fósil (Inspirada en us-east-1)"
+    ci_mean_g_kwh: 550.0
+    ci_amp_g_kwh: 120.0
+    ci_phase_rad: 3.14
+    price_per_vcpu_h: 0.040
+    max_vcpu: 160
+    net_latency_h: 0.015       # Equiv. 15 ms / batch
+    power_kw_per_vcpu: 0.045
+
+# Configuración de los 3 escenarios experimentales del 1er Parcial
+scenarios:
+  normal:
+    arrival_rate_per_h: 18.0   # Tasa media de llegada Poisson (~45% carga agregada)
+    num_tasks: 100
+    ci_overrides: {}
+
+  high_demand:
+    arrival_rate_per_h: 34.0   # Alta demanda (~80-85% carga agregada, estresa colas FIFO)
+    num_tasks: 100
+    ci_overrides: {}
+
+  high_carbon_region:
+    arrival_rate_per_h: 18.0
+    num_tasks: 100
+    ci_overrides:
+      2: 780.0                 # Cloud C sube a 780 gCO2/kWh (pico de carbón)

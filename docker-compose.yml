@@ -1,0 +1,8 @@
+services:
+  carbon-scheduler-v1:
+    build: .
+    container_name: carbon_aware_scheduler_v1
+    volumes:
+      - ./results:/app/results
+      - ./data/generated_workloads:/app/data/generated_workloads
+      - ./models_saved:/app/models_saved

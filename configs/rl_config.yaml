@@ -1,0 +1,27 @@
+# configs/rl_config.yaml
+# Hiperparámetros de Q-Learning Tabular y Función de Recompensa (V1)
+
+reward_weights:
+  w_carbon: 0.50             # Peso para emisiones de CO2 normalizadas (\hat{E}_i)
+  w_cost: 0.25               # Peso para costo operativo normalizado (\hat{Cost}_i)
+  w_latency: 0.25            # Peso para latencia/espera normalizada (\hat{L}_i)
+  lambda_sla: 2.00           # Penalización dominante por violación de SLA (\lambda_{sla} > 1.0)
+
+discretization:
+  # Umbrales de intensidad de carbono (gCO2/kWh): 0=Bajo (<150), 1=Medio (150-400), 2=Alto (>400)
+  ci_bins: [150.0, 400.0]
+  # Umbrales de utilización de CPU (u_r): 0=Libre (<0.70), 1=Casi lleno (0.70-0.999), 2=Encolando (>=1.0 o wait > 0)
+  load_threshold_medium: 0.70
+  # Umbral de holgura relativa (\Delta_i / d_i) para urgencia: 1=Urgente (<0.5), 0=Flexible (>=0.5)
+  urgency_slack_ratio: 0.50
+
+q_learning:
+  num_states: 1458           # 3^3 (Carbono) * 3^3 (Carga/Cola) * 2 (Urgencia)
+  num_actions: 3             # 0: Cloud A, 1: Cloud B, 2: Cloud C
+  alpha: 0.15                # Tasa de aprendizaje (\alpha)
+  gamma: 0.90                # Factor de descuento (\gamma)
+  epsilon_start: 1.0         # Exploración inicial (\epsilon-greedy)
+  epsilon_min: 0.02          # Exploración mínima residual en entrenamiento
+  epsilon_decay: 0.992       # Decaimiento exponencial por episodio
+  num_episodes: 600          # Episodios de entrenamiento (Semillas 100..699)
+  mixed_scenarios: true      # Entrenar sobre los 3 escenarios para evitar estados no visitados
