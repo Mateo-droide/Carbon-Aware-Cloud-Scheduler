@@ -33,3 +33,10 @@ python -m scripts.train_agent
 
 # 5. Ejecutar evaluación oficial V1 (10 semillas de prueba disjuntas: 200..209)
 python -m scripts.run_experiments
+
+
+##Nivel 2: Ejecución Reproducible con Docker (Contenerizada)
+Empaqueta el entorno con python:3.12-slim y sus dependencias exactas para garantizar que cualquier evaluador obtenga los mismos resultados con un solo comando sin configurar Python localmente:
+```bash
+
+docker compose up --build
